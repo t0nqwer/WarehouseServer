@@ -19,6 +19,13 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+const router = express.Router();
+app.use(
+  "/",
+  router.get("", (req, res) => {
+    res.status(200).json({ message: "Hello World" });
+  })
+);
 const port = parseInt(process.env.PORT) || 7070;
 const server = app.listen(port, () => {
   console.log(`helloworld: listening on http://localhost:${port}`);
