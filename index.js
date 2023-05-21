@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 const router = express.Router();
 router.use(verify);
-setInterval(CheckBarcode, 60000);
+
 app.use(
   "/",
   router.get("", (req, res) => {
