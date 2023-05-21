@@ -6,7 +6,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import { Server } from "socket.io";
-
+import { verify } from "./middleware/authorize.js";
+import { CheckBarcode } from "./controller/updateBarcode.js";
+import BarcodeRoute from "./routes/Barcode.js";
 dotenv.config();
 const app = express();
 mongoose.connect(process.env.MONGO_URI, {}).then(() => {
@@ -20,13 +22,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 const router = express.Router();
+router.use(verify);
+setInterval(CheckBarcode, 60000);
 app.use(
   "/",
   router.get("", (req, res) => {
     res.status(200).json({ message: "Hello World" });
   })
 );
-const port = parseInt(process.env.PORT) || 7070;
+app.use("/barcode", BarcodeRoute);
+const port = parseInt(process.env.PORT) || 7080;
 const server = app.listen(port, () => {
   console.log(`helloworld: listening on http://localhost:${port}`);
 });

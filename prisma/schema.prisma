@@ -6,7 +6,90 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("MONGO_URI")
 }
-         
+
+model StockProduct {
+  id             String               @id @default(auto()) @map("_id") @db.ObjectId
+  barcode        String @unique
+  cloth          Boolean
+  size           String?
+  code           String?
+  name           String
+  fabric         String?
+  sort           Int?
+  price          Int
+  brand          String
+  Stock          Stock[]
+  TranferDetails TranferListDetails[]
+  StockLog       StockLog[]
+}
+
+model Stock {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  qty            Int
+  storelist      storelist    @relation(fields: [storelistId], references: [id])
+  storelistId    String       @db.ObjectId
+  StockProduct   StockProduct @relation(fields: [stockProductId], references: [id])
+  stockProductId String       @db.ObjectId
+}
+
+model User {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  Username    String
+  First_Name  String
+  Last_Name   String
+  password    String
+  StockLog    StockLog[]
+  TranferUser TranferList[] @relation("issue")
+  ArrivalUser TranferList[] @relation("arrival")
+}
+
+model StockLog {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  actiontype     String
+  qty            Int
+  StockProduct   StockProduct @relation(fields: [stockProductId], references: [id])
+  stockProductId String       @db.ObjectId
+  User           User         @relation(fields: [userId], references: [id])
+  userId         String       @db.ObjectId
+}
+
+model storelist {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  Name        String
+  Discription String?
+  Address     String?
+  stocks      Stock[]
+  Tranferfrom TranferList[] @relation("from")
+  Tranferto   TranferList[] @relation("to")
+}
+
+model TranferList {
+  id             String               @id @default(auto()) @map("_id") @db.ObjectId
+  From           String               @db.ObjectId
+  To             String               @db.ObjectId
+  storeFrom      storelist            @relation("from", fields: [storeFromId], references: [id])
+  storeTo        storelist            @relation("to", fields: [storeToId], references: [id])
+  issueUserID    String               @db.ObjectId
+  arrivalUserID  String               @db.ObjectId
+  issueUser      User                 @relation("issue", fields: [issueUserID], references: [id])
+  arrivalUser    User                 @relation("arrival", fields: [issueUserID], references: [id])
+  storeFromId    String               @db.ObjectId
+  storeToId      String               @db.ObjectId
+  issueDate      DateTime
+  arrivalDate    DateTime?
+  Status         String
+  TranferDetails TranferListDetails[]
+}
+
+model TranferListDetails {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  qty            Int
+  CheckQty       Int?
+  StockProduct   StockProduct @relation(fields: [stockProductId], references: [id])
+  stockProductId String       @db.ObjectId
+  TranferList    TranferList  @relation(fields: [tranferListId], references: [id])
+  tranferListId  String       @db.ObjectId
+}
