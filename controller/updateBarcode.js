@@ -1,5 +1,6 @@
 import axios from "axios";
-import { PrismaClient } from "@prisma/client";
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export const CheckBarcode = async () => {
