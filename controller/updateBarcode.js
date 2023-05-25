@@ -76,4 +76,4 @@ export const CheckBarcode = async () => {
     console.log(error.message);
   }
 };
-setInterval(CheckBarcode, 60000);
+// setInterval(CheckBarcode, 60000);

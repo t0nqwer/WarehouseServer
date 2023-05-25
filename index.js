@@ -10,6 +10,12 @@ import { verify } from "./middleware/authorize.js";
 import { CheckBarcode } from "./controller/updateBarcode.js";
 import BarcodeRoute from "./routes/Barcode.js";
 import StockRoute from "./routes/Stock.js";
+import {
+  addNewUser,
+  addsize,
+  removeUser,
+  updatePrice,
+} from "./controller/socketio.js";
 dotenv.config();
 const app = express();
 
@@ -35,18 +41,23 @@ const port = parseInt(process.env.PORT) || 7080;
 const server = app.listen(port, () => {
   console.log(`helloworld: listening on http://localhost:${port}`);
 });
-const io = new Server({
-  // pingTimeout: 60000,
-  // cors: {
-  //   origin: [
-  //     "http://localhost:3000",
-  //     ["https://khwantadashboard.web.app/"],
-  //     ["127.0.0.1"],
-  //   ],
-  // },
-});
-io.attach(server);
-
+export const io = new Server(server);
 io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+  console.log(socket.id);
+  socket.on("price", (data) => {
+    updatePrice(data.barcode, data.price);
+    socket.broadcast.emit("price", data);
+  });
+  socket.on("newUser", (username) => {
+    addNewUser(username, socket.id);
+  });
+  socket.on("addSize", ({ data }) => {
+    addsize(data);
+    socket.broadcast.emit("addSize", data);
+  });
+  socket.on("disconnect", (reason) => {
+    console.log(reason);
+    removeUser(socket.id);
+  });
 });
+// io.attach(server);
