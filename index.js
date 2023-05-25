@@ -13,6 +13,7 @@ import StockRoute from "./routes/Stock.js";
 import {
   addNewUser,
   addsize,
+  newCloth,
   removeUser,
   updatePrice,
 } from "./controller/socketio.js";
@@ -54,6 +55,10 @@ io.on("connection", (socket) => {
   socket.on("addSize", ({ data }) => {
     addsize(data);
     socket.broadcast.emit("addSize", data);
+  });
+  socket.on("newCloth", ({ data }) => {
+    newCloth(data);
+    socket.broadcast.emit("newCloth", data);
   });
   socket.on("disconnect", (reason) => {
     console.log(reason);
