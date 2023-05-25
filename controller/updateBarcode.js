@@ -1,13 +1,13 @@
 import axios from "axios";
 import pkg from "@prisma/client";
+import pkg2 from "node-schedule";
+const { scheduleJob } = pkg2;
 const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export const CheckBarcode = async () => {
   try {
-    const response = await axios.get(
-      "https://khwanta-api2546.com/stock/stockdata"
-    );
+    const response = await axios.get("http://localhost:7070/stock/stockdata");
 
     const currentbarcode = await prisma.stockProduct.findMany({
       select: {
@@ -42,13 +42,13 @@ export const CheckBarcode = async () => {
           },
         })
     );
-    // const deletebarcode = currentlist.filter((item) => !newlist.includes(item));
-    // deletebarcode.map(
-    //   async (item) =>
-    //     await prisma.stockProduct.delete({
-    //       where: { barcode: item },
-    //     })
-    // );
+    const deletebarcode = currentlist.filter((item) => !newlist.includes(item));
+    deletebarcode.map(
+      async (item) =>
+        await prisma.stockProduct.delete({
+          where: { barcode: item },
+        })
+    );
     const updateBarcode = oldproduct.map(
       async (item) =>
         await prisma.stockProduct.update({
@@ -76,4 +76,4 @@ export const CheckBarcode = async () => {
     console.log(error.message);
   }
 };
-// setInterval(CheckBarcode, 60000);
+scheduleJob("49 * * * *", () => CheckBarcode());

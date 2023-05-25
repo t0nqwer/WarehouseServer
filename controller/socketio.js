@@ -56,3 +56,13 @@ export const addsize = async (data) => {
     console.log(error.message);
   }
 };
+export const newCloth = async (data) => {
+  console.log(data);
+  try {
+    await prisma.stockProduct.createMany({
+      data,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
