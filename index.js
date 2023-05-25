@@ -9,11 +9,10 @@ import { Server } from "socket.io";
 import { verify } from "./middleware/authorize.js";
 import { CheckBarcode } from "./controller/updateBarcode.js";
 import BarcodeRoute from "./routes/Barcode.js";
+import StockRoute from "./routes/Stock.js";
 dotenv.config();
 const app = express();
-mongoose.connect(process.env.MONGO_URI, {}).then(() => {
-  console.log("Connected to MongoDB");
-});
+
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
@@ -31,15 +30,20 @@ app.use(
   })
 );
 app.use("/barcode", BarcodeRoute);
+app.use("/stock", StockRoute);
 const port = parseInt(process.env.PORT) || 7080;
 const server = app.listen(port, () => {
   console.log(`helloworld: listening on http://localhost:${port}`);
 });
 const io = new Server({
-  pingTimeout: 60000,
-  cors: {
-    origin: ["http://localhost:3000", ["https://khwantadashboard.web.app/"]],
-  },
+  // pingTimeout: 60000,
+  // cors: {
+  //   origin: [
+  //     "http://localhost:3000",
+  //     ["https://khwantadashboard.web.app/"],
+  //     ["127.0.0.1"],
+  //   ],
+  // },
 });
 io.attach(server);
 

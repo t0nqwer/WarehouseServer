@@ -42,13 +42,13 @@ export const CheckBarcode = async () => {
           },
         })
     );
-    const deletebarcode = currentlist.filter((item) => !newlist.includes(item));
-    deletebarcode.map(
-      async (item) =>
-        await prisma.stockProduct.delete({
-          where: { barcode: item },
-        })
-    );
+    // const deletebarcode = currentlist.filter((item) => !newlist.includes(item));
+    // deletebarcode.map(
+    //   async (item) =>
+    //     await prisma.stockProduct.delete({
+    //       where: { barcode: item },
+    //     })
+    // );
     const updateBarcode = oldproduct.map(
       async (item) =>
         await prisma.stockProduct.update({
