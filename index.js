@@ -48,5 +48,5 @@ const io = new Server({
 io.attach(server);
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  console.log("a user connected", socket.id);
 });
