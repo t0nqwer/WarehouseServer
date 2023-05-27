@@ -7,7 +7,9 @@ const prisma = new PrismaClient();
 
 export const CheckBarcode = async () => {
   try {
-    const response = await axios.get("http://localhost:7070/stock/stockdata");
+    const response = await axios.get(
+      "https://khwanta-api2546.com/stock/stockdata"
+    );
 
     const currentbarcode = await prisma.stockProduct.findMany({
       select: {
@@ -76,4 +78,4 @@ export const CheckBarcode = async () => {
     console.log(error.message);
   }
 };
-scheduleJob("49 * * * *", () => CheckBarcode());
+scheduleJob("57 * * * *", () => CheckBarcode());
