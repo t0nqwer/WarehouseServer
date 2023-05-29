@@ -60,6 +60,10 @@ io.on("connection", (socket) => {
     newCloth(data);
     socket.broadcast.emit("newCloth", data);
   });
+  socket.on("newexample", ({ data }) => {
+    newCloth(data);
+    socket.broadcast.emit("newexample", data);
+  });
   socket.on("disconnect", (reason) => {
     console.log(reason);
     removeUser(socket.id);
