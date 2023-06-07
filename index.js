@@ -68,5 +68,8 @@ io.on("connection", (socket) => {
     console.log(reason);
     removeUser(socket.id);
   });
+  socket.on("stockIn", (data) => {
+    console.log(data);
+  });
 });
 // io.attach(server);

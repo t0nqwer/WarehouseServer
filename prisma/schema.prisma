@@ -57,20 +57,16 @@ model StockLog {
 }
 
 model storelist {
-  id              String            @id @default(auto()) @map("_id") @db.ObjectId
-  Name            String    @unique
-  Discription     String?
-  Address         String?
-    connection_id String? @unique
-      status        Boolean @default(false)
-  stocks          Stock[]
-  Tranferfrom     TranferList[]     @relation("from")
-  Tranferto       TranferList[]     @relation("to")
-
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  Name          String        @unique
+  Discription   String?
+  Address       String?
+  connection_id String?       @unique
+  status        Boolean       @default(false)
+  stocks        Stock[]
+  Tranferfrom   TranferList[] @relation("from")
+  Tranferto     TranferList[] @relation("to")
 }
-
-
-
 
 model TranferList {
   id             String               @id @default(auto()) @map("_id") @db.ObjectId
